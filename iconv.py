@@ -30,14 +30,22 @@ def to_iconv(file,newfile, oldcode = 'UTF-8', newcode = 'GB18030'):
 # 读取文件内容,然后另存时进行编码
 def to_other_save(file,newfile, oldcode = 'UTF-8', newcode = 'GB18030'):
     file_size = os.path.getsize(file) # byte
-    if file_size < 100*1024*1024: # 100M
-        f = codecs.open(file, "r", oldcode)
-        lines = f.readlines()
-        f.close()
-        n_f = codecs.open(newfile,'a+',newcode)
-        for line in lines:
-            n_f.write(line)
-        n_f.close()
+    n_f = codecs.open(newfile, 'a+', newcode)
+    with codecs.open(file, "r", oldcode) as f:
+        buffer = f.read(1024 * 1024)
+        if buffer:
+            n_f.write(buffer)
+
+    n_f.close()
+
+    # f = codecs.open(file, "r", oldcode)
+    # if file_size < 100*1024*1024: # 100M
+    #     lines = f.readlines()
+    #     f.close()
+    #     for line in lines:
+    #         n_f.write(line)
+    #     n_f.close()
+
 
 # 启动程序
 def run():
